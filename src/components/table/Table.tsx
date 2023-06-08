@@ -24,7 +24,7 @@ const Table = () => {
 
     const computeWinner = (cells: any) => {
         const lines = [
-            [1,2,3],
+            [0,1,2],
             [3,4,5],
             [6,7,8],
             [0,3,6],
@@ -55,7 +55,6 @@ const Table = () => {
         const cellsCopy = cells.slice()
         //@ts-ignore
         cellsCopy[index] = currentStep
-
         const winner = computeWinner(cellsCopy)
 
         setCells(cellsCopy)
