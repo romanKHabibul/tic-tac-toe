@@ -8,14 +8,14 @@ const Table = () => {
     const SYMBOL_X = "x"
     const SYMBOL_O = "o"
     const [currentStep, setCurrentStep] = useState(SYMBOL_X)
-    const [winnerSequere, setWinnerSequere] = useState<number[]>()
+    const [winnerSequence, setWinnerSequence] = useState<number[]>()
     const [cells, setCells] = useState([null,null,null,null,null,null,null,null,null])
-
-    const getCellColor = (cell: string | null) => {
+    
+    const getColor = (cell: any) => {
         if(cell === SYMBOL_X){
             return "red"
         } else {
-            return 'green'
+            return "green"
         }
     }
 
@@ -42,23 +42,30 @@ const Table = () => {
         }
     }
 
-    console.log(cells)
-    console.log(winnerSequere)
-
     const handleClick = (index: number) => {
         if(cells[index]){
             return;
         }
-        const copied = cells.slice()
+        if(winnerSequence){
+            return;
+        }
+        const cellsCopy = cells.slice()
         //@ts-ignore
-        copied[index] = currentStep
+        cellsCopy[index] = currentStep
 
-        const winner = computeWinner(copied)
-        
-        setCells(copied)
-        currentStep === SYMBOL_X ? setCurrentStep(SYMBOL_O) : setCurrentStep(SYMBOL_X)
-        setWinnerSequere(winner)
+        const winner = computeWinner(cellsCopy)
+
+        setCells(cellsCopy)
+        setCurrentStep(currentStep === SYMBOL_O ? SYMBOL_X : SYMBOL_O)
+        setWinnerSequence(winner)
     }
+
+    const playAgain = () => {
+        setWinnerSequence(undefined)
+        setCells([null,null,null,null,null,null,null,null,null])
+    }
+
+    console.log(cells)
 
     return (
        <div className={cl.game}>
@@ -67,20 +74,24 @@ const Table = () => {
             </div>
             <div className={cl.gameField}>
                 {cells.map((cell, index) => {
-                    const isWinner = winnerSequere?.includes(index)
+                    const isWinner = winnerSequence?.includes(index)
                     console.log(isWinner)
                     return <button 
-                            onClick={() => 
-                            handleClick(index)} 
-                            className={isWinner ? cl.cell + ' ' + cl.cellWin : cl.cell} 
+                            onClick={() => handleClick(index)} 
+                            className={isWinner ? cl.cell + ' ' + cl.cellWin : cl.cell}
                             key={index}
                             >
-                        <span style={{color: getCellColor(cell)}}>
+                        <span style={{color: getColor(cell)}}>
                             {cell}
                         </span>
                     </button>
                 })}
             </div>
+            {winnerSequence &&
+            <button onClick={playAgain} className={cl.clear}>
+                Играть ещё
+            </button>
+            }
        </div>
     )
 }
