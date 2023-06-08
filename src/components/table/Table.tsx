@@ -12,10 +12,13 @@ const Table = () => {
     const [cells, setCells] = useState([null,null,null,null,null,null,null,null,null])
     
     const getColor = (cell: any) => {
-        if(cell === SYMBOL_X){
+        if(cell == SYMBOL_X){
             return "red"
-        } else {
+        } else
+        if(cell == SYMBOL_O) {
             return "green"
+        } else {
+            return 
         }
     }
 
@@ -61,11 +64,11 @@ const Table = () => {
     }
 
     const playAgain = () => {
+        setCurrentStep(SYMBOL_X)
         setWinnerSequence(undefined)
         setCells([null,null,null,null,null,null,null,null,null])
     }
 
-    console.log(cells)
 
     return (
        <div className={cl.game}>
@@ -75,7 +78,6 @@ const Table = () => {
             <div className={cl.gameField}>
                 {cells.map((cell, index) => {
                     const isWinner = winnerSequence?.includes(index)
-                    console.log(isWinner)
                     return <button 
                             onClick={() => handleClick(index)} 
                             className={isWinner ? cl.cell + ' ' + cl.cellWin : cl.cell}
@@ -88,9 +90,16 @@ const Table = () => {
                 })}
             </div>
             {winnerSequence &&
-            <button onClick={playAgain} className={cl.clear}>
-                Играть ещё
-            </button>
+            <div className={cl.bg}>
+                <div className={cl.endGame}>
+                    <h2 className={cl.endTitle}>
+                        В игре победили <span style={{color: getColor(currentStep === SYMBOL_X ? SYMBOL_O : SYMBOL_X)}}>{currentStep === SYMBOL_X ? SYMBOL_O : SYMBOL_X}</span>
+                    </h2>
+                    <button onClick={playAgain} className={cl.clear}>
+                        Играть ещё
+                    </button>
+                </div>
+            </div>
             }
        </div>
     )
